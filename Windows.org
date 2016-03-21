@@ -1,0 +1,147 @@
+﻿
+=! 警惕： robocopy /mir 或 robocopy /purge 会将链接到的地方的文件也给清空！！！=
+
+=Clear=
+#+BEGIN_SRC elisp
+(replace-string "[X]" "[ ]")
+#+END_SRC
+
+* 分区
+** 方案一
+C盘 - [随时可格式化] 系统、软件、临时文件、缓存文件
+D盘 - 便携式软件、下载、电影、素材、安装包
+E盘 - 用户和软件资料
+F盘 - 加密盘，不自动解锁，Works和文档笔记，私密软件
+** 方案二
+不要熬夜(C:) 系统,软件
+按时吃饭(D:) _Apps, _Games, _MyApps
+积极进取(E:) __Home, _Public, _Videos, _VMs
+然后把这些全部 mklink /j C:\name (D/E):\name
+SowicmSync(S:) BoxCryptor/ TrueCrypt/ EncFS
+** 方案三 （Win8 + Mac + Ubuntu）(Later.. ArchLinux FreeBSD)
+   - 通用分区
+   -  Windows8 分区   =无法绿化的软件装此分区=
+   -  Windows 软件分区 =尽量把软件装这里，节约重装系统的时间(确保不需再次安装即可使用)=
+   -  Mac 分区
+   -  Ubuntu 分区
+
+
+* Windows
+1. [X] 安装系统
+2. [-] 初始化
+   1) [X] 用 Sowicm Right 登录
+   2) [X] 验证 Sowicm Right
+   3) [X] .Net 2.x 3.x
+          dism /online /enable-feature /featurename:NetFX3 /Source:Z:\sources\sxs 
+   4) [X] net user administrator /active:yes
+   5) [X] net user administrator 密码
+   6) [X] 设置 TPM 和 BitLocker （每个盘符，均自动解锁）
+   7) [ ] =恢复密钥保存至轻笔记=
+   8) [X] 重启
+3. [-] 基础环境
+   1) [X] 登录administrator
+   2) [-] User
+      [尝试] 在已经使用过的机器上面，将 Sowicm Right 的UID （SID）改成原来的UID （SID）
+      1) [X] 将 C:\__Home\Windows\Sowicm 重命名为 Sowicm_
+         #+BEGIN_SRC sh
+         rename C:\__Home\Windows\Sowicm Sowicm_
+         #+END_SRC
+      2) [X] 创建 C:\__Home\Windows\Sowicm 并设置ACL
+             =所有 ACL 至少保留 SYSTEM Sowicm Administrator 3个完全访问权限=
+             =否则将来很麻烦=
+      3) [X] FastCopy C:\Users\Sowicm C:\__Home\Windows\Sowicm (with
+         Verify ACL AltStream) /junction 并检查 log 确保无错 =不能直接
+         剪切，Junction会变成空目录，或卡住=
+      4) [X] 将 Sowicm_\__SowicmSync 以及其他需要保留的文件或文件夹拷贝到 Sowicm
+      5) [X] 删除 Sowicm_
+      6) [X] 删除 C:\Users\Sowicm
+      7) [X] mklink /j C:\Users\Sowicm C:\__Home\Windows\Sowicm
+             =不要写进 setup.bat 中，否则会为以后运行 setup.bat 带来大麻烦!=
+      8) [X] run C:\__Home\Windows\Sowicm\Dropbox\_win\!setup.bat
+         #+BEGIN_SRC sh
+         C:/__Home/Windows/Sowicm/Dropbox/_win/!setup.bat 1>>setup.log 2>>&1
+         #+END_SRC
+      9) [-] 设置 C:\Users\Sowicm 的ACL+
+         - [X] 注销并登录 Sowicm Right
+         - [X] net user administrator /active:no
+         - [X] 修改电源选项 合上盖子-无操作 插上电源自动睡眠-永不
+         - [ ] 电源管理，禁用快速开机（有bug，造成开机时重复提示“你好”）
+         - [ ] 下载安装 McAfee
+         - [X] 下载安装 dropbox
+         - [X] 下载安装 boxcryptor
+         - [X] run S:\_win\set_environments.bat
+         - [X] run S:\_win\setup.bat S:\_win\[home].bat
+         - [X] 桌面仅保留 回收站 和 Incoming
+         - [X] 自启仅保留 dropbox, boxcryptor, startups.bat
+4. +[ ] 安装 3   - （找替代品）
+5. +[ ] 安装 Google云端硬盘+
+6. [ ] =备份系统 (要能访问到每个文件的那种备份，+ Ghost备份）=
+7. [X] 激活 Windows
+8. [-] install Basic Apps
+   - [X] install Chrome
+   - [X] install Office
+   - [X] activate Office
+   - [X] install SkyDrive (not Pro)
+   - [X] install 百度拼音输入法
+   - +[ ] install GTalk+ (deprecated)
+   - [X] install QQ
+   - +[ ] install QQ电脑管家+ (deprecated) (流量监控)
+   - [ ] 安装 迅雷VIP
+   - +[ ] 安装 ACDSee+ （deprecated)
+   - [X] install 美图看看
+   - [X] install Beyond Compare
+   - [X] install Everything
+   - [X] install ConceptDraw Office 2
+   - [X] install DAEMON Tools Lite
+9. [-] more Apps
+   - [ ] install WinRAR
+   - [ ] install Viso
+   - [X] install QQ音乐
+   - [ ] 安装 工行网银助手
+   - [ ] 安装 阿里旺旺卖家版
+   - [ ] 安装 Visual Studio
+   - [ ] 安装 飞信
+   - [ ] 安装 JDK x64 + x86
+   - [ ] 安装 OpenAL
+   - +[ ] 安装 TortoiseSVN+ (deprecated)
+   - [ ] 安装 VMWare
+   - +[ ] 安装 WD Apps+ (deprecated)
+   - +[ ] 启动 FTP 和 IIS控制台+ (deprecated)
+   - +[ ] 防火墙允许 FTP 专网通信+ (deprecated)
+   - [ ] 安装 Flash
+   - [ ] 安装 uTorrent
+   - [ ] 安装 迅雷看看
+   - [ ] 安装 暴风影音
+   - [ ] 安装 酷我音乐盒
+   - +[ ] install cmake+ (deprecated)
+   - [ ] install WPS
+   - [ ] install ActiveStatePython
+   - [ ] install Ulead Cool 3D
+   - +[ ] install MySQL+ (deprecated)
+   - [ ] install YY
+   - [ ] install Android SDK
+   - [ ] install Google App Engine
+   - [ ] install DirectX SDK
+   - [ ] install 百度影音
+   - [ ] install Windows Live Writer
+   - [ ] install NetBeans
+   - [ ] install Mindjet MindManager
+   - +[ ] install Git+ (deprecated)
+   - [ ] install snarl
+   - [ ] install Acrobat Pro
+   - [X] install Photoshop x64
+   - [ ] install Illustrator x64
+   - [ ] install Premiere Pro x64
+   - [ ] install Microsofft Games for Windows - LIVE
+   - [ ] install Skype
+   - [ ] install WinPcap
+   - [X] install Windows ADK
+
+Microsoft Web Deploy
+NuGet
+
+
+** Windows应用
+
+** 无法绿化的软件（装在C盘的软件）
+- [ ] Visual Studio
